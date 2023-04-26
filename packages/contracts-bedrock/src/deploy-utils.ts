@@ -366,13 +366,12 @@ export const liveDeployer = async (opts: {
   hre: HardhatRuntimeEnvironment
   disabled: string | undefined
 }): Promise<boolean> => {
-  let ret: boolean
   if (!!opts.disabled) {
     console.log('Setting live deployer to', false)
     return false
   }
   const { deployer } = await opts.hre.getNamedAccounts()
-  ret =
+  const ret =
     deployer.toLowerCase() === opts.hre.deployConfig.controller.toLowerCase()
   console.log('Setting live deployer to', ret)
   return ret
@@ -494,7 +493,7 @@ export const doPhase = async (opts: {
   let tx
   if (opts.args.length > 0) {
     tx = await opts.SystemDictator.populateTransaction[`phase${opts.phase}`](
-      opts.args
+      ...opts.args
     )
   } else {
     tx = await opts.SystemDictator.populateTransaction[`phase${opts.phase}`]()
