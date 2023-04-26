@@ -368,6 +368,7 @@ export const liveDeployer = async (opts: {
 }): Promise<boolean> => {
   let ret: boolean
   if (!!opts.disabled) {
+    console.log('Setting live deployer to', false)
     return false
   }
   const { deployer } = await opts.hre.getNamedAccounts()
@@ -447,6 +448,7 @@ export const doStep = async (opts: {
     console.log(`Please execute step ${opts.step}...`)
     console.log(`MSD address: ${opts.SystemDictator.address}`)
     printJsonTransaction(tx)
+    printCastCommand(tx)
     await printTenderlySimulationLink(opts.SystemDictator.provider, tx)
   }
 
@@ -547,8 +549,12 @@ export const printTenderlySimulationLink = async (
  */
 export const printCastCommand = (tx: ethers.PopulatedTransaction): void => {
   if (process.env.CAST_COMMANDS) {
-    console.log(
-      `cast send ${tx.to} ${tx.data} --from ${tx.from} --value ${tx.value}`
-    )
+    if (!!tx.value && tx.value.gt(0)) {
+      console.log(
+        `cast send ${tx.to} ${tx.data} --from ${tx.from} --value ${tx.value}`
+      )
+    } else {
+      console.log(`cast send ${tx.to} ${tx.data} --from ${tx.from} `)
+    }
   }
 }
