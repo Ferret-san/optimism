@@ -368,7 +368,7 @@ export const liveDeployer = async (opts: {
 }): Promise<boolean> => {
   let ret: boolean
   if (!!opts.disabled) {
-    ret = false
+    return false
   }
   const { deployer } = await opts.hre.getNamedAccounts()
   ret =
